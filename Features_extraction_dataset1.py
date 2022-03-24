@@ -19,12 +19,17 @@ for file in range(len(files)):
             continue
         index = np.where(np.abs(control) == 0)
         start = index[0][0]
+        end = 13
         for j in range(3):
             if control[start+3] == 0:
                 break
             else:
                 start = index[0][j+1]
-        if control[start+13] == 0 and Ecell[start+13] > 4.0:
+        if Current[start] > 1:
+            start = start + 1
+            if control[start + 13] != 0:
+                end = 12
+        if control[start + end] == 0 and Ecell[start + end] > 4.0:
             df_res = df_res.append({'cycle': i, 'Voltages': Ecell[start:start+14], 'rate': cr, 'Tem': Tem,
                                     'Capacity': np.max(Q_dis)}, ignore_index=True)
 
