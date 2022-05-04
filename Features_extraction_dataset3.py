@@ -4,7 +4,7 @@ import re
 import numpy as np
 
 
-df_res = pd.DataFrame(columns=['cycle', 'Voltages', 'rate', 'Tem', 'Capacity'])
+df_res = pd.DataFrame(columns=['cycle', 'Voltages', 'C_rate', 'D_rate', 'Tem', 'Capacity'])
 files = os.listdir('./Dataset_3_NCM_NCA_battery/')
 for file in range(len(files)):
     Tem = int(files[file][2:4])
@@ -20,6 +20,7 @@ for file in range(len(files)):
         Current = np.array(data_i['<I>/mA'])
         control = np.array(data_i['control/V/mA'])
         cr = np.array(data_i['control/mA'])[1] / 2500
+        cr_d = int(files[file][8])
         if np.max(Q_dis) < 1650 or np.max(Q_dis) > 2510:
             delta = delta + 1
             continue
@@ -37,7 +38,7 @@ for file in range(len(files)):
             print(i)
         if control[start + 19] == 0:
             df_res = df_res.append(
-                {'cycle': i, 'Voltages': Ecell[start:start + 59], 'rate': cr, 'Tem': Tem,
+                {'cycle': i, 'Voltages': Ecell[start:start + 59], 'C_rate': cr, 'D_rate': cr_d, 'Tem': Tem,
                  'Capacity': np.max(Q_dis)}, ignore_index=True)
 
 # Save to excel file
