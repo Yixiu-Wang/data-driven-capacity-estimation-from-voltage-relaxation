@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import re
 import numpy as np
 
 df_res = pd.DataFrame(columns=['cycle', 'Voltages', 'rate', 'Tem', 'Capacity'])
@@ -30,8 +29,8 @@ for file in range(len(files)):
             if control[start + 13] != 0:
                 end = 12
         if control[start + end] == 0 and Ecell[start + end] > 4.0:
-            df_res = df_res.append({'cycle': i, 'Voltages': Ecell[start:start+14], 'rate': cr, 'Tem': Tem,
-                                    'Capacity': np.max(Q_dis)}, ignore_index=True)
+            df_res = pd.concat([df_res, pd.DataFrame.from_dict({'cycle': i, 'Voltages': Ecell[start:start+14], 'rate': cr, 'Tem': Tem,
+                                    'Capacity': np.max(Q_dis)})], ignore_index=True)
 
 # Save to excel file
 df_res.to_excel('Dataset_1_NCA_battery.xlsx', index=False)
